@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fidelización — Panel de pruebas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tinta:#14171c;
+    --tinta-suave:#2a2f38;
+    --papel:#f7f7f4;
+    --papel-tarjeta:#ffffff;
+    --oro:#c8931a;
+    --oro-suave:#f4e6c4;
+    --texto:#1c1f26;
+    --texto-tenue:#6b7280;
+    --borde:#e4e2dc;
+    --ok:#1f8a4c;
+    --err:#c0392b;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',sans-serif;background:var(--papel);color:var(--texto);}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;margin:0;}
+  .layout{display:grid;grid-template-columns:220px 1fr 340px;min-height:100vh;}
+  /* ---------- barra lateral ---------- */
+  .sidebar{background:var(--tinta);color:#fff;padding:28px 0;}
+  .marca{padding:0 24px 24px;border-bottom:1px solid var(--tinta-suave);margin-bottom:12px;}
+  .marca .moneda{width:34px;height:34px;border-radius:50%;background:var(--oro);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--tinta);font-family:'Space Grotesk',sans-serif;margin-bottom:10px;}
+  .marca h1{font-size:16px;line-height:1.3;}
+  .marca p{font-size:12px;color:#9aa1ad;margin:4px 0 0;}
+  nav button{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+    background:none;border:none;color:#c7cbd3;padding:11px 24px;font-size:13.5px;
+    font-family:'Inter',sans-serif;cursor:pointer;border-left:3px solid transparent;
+  }
+  nav button .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:#6b7280;width:18px;}
+  nav button:hover{background:var(--tinta-suave);color:#fff;}
+  nav button.activo{background:var(--tinta-suave);color:#fff;border-left-color:var(--oro);}
+  nav button.activo .num{color:var(--oro);}
+  /* ---------- contenido central ---------- */
+  main{padding:32px 36px;overflow-y:auto;}
+  .encabezado{margin-bottom:24px;}
+  .encabezado p{color:var(--texto-tenue);font-size:13.5px;margin-top:6px;}
+  .estado-servidor{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--texto-tenue);margin-top:10px;}
+  .punto{width:7px;height:7px;border-radius:50%;background:#bbb;}
+  .punto.conectado{background:var(--ok);}
+  .punto.error{background:var(--err);}
+  .panel{background:var(--papel-tarjeta);border:1px solid var(--borde);border-radius:10px;padding:20px 22px;margin-bottom:20px;}
+  .panel h3{font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .etiqueta-metodo{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:2px 7px;border-radius:4px;font-weight:500;}
+  .m-post{background:#e4f3e8;color:var(--ok);}
+  .m-get{background:#e6edf7;color:#2f5faa;}
+  .m-put{background:#fdf1dc;color:#a3690c;}
+  .m-delete{background:#fbe7e5;color:var(--err);}
+  .fila{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:12px;}
+  label{display:block;font-size:12px;color:var(--texto-tenue);margin-bottom:5px;}
+  input,select{width:100%;padding:8px 10px;border:1px solid var(--borde);border-radius:6px;font-size:13.5px;font-family:'Inter',sans-serif;background:#fff;}
+  input:focus,select:focus{outline:2px solid var(--oro-suave);border-color:var(--oro);}
+  .acciones{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+  button.accion{
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:9px 16px;
+    border-radius:6px;border:1px solid var(--tinta);background:var(--tinta);color:#fff;cursor:pointer;
+  }
+  button.accion:hover{background:#000;}
+  button.secundaria{background:#fff;color:var(--texto);border-color:var(--borde);}
+  button.secundaria:hover{background:#f1f0eb;}
+  button.peligro{background:#fff;color:var(--err);border-color:#f1c7c1;}
+  button.peligro:hover{background:#fdf1f0;}
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-size:12.5px;}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--borde);}
+  th{color:var(--texto-tenue);font-weight:500;font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;}
+  tr:hover{background:#faf9f6;}
+  td button{font-size:11px;padding:3px 8px;border-radius:4px;border:1px solid var(--borde);background:#fff;cursor:pointer;margin-right:4px;}
+  .oculto{display:none;}
+  /* ---------- recibo (panel derecho) ---------- */
+  .recibo-columna{background:#efece3;border-left:1px solid var(--borde);padding:30px 22px;}
+  .recibo{
+    background:#fff;border-radius:2px;padding:20px 18px;
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.6;
+    box-shadow:0 1px 3px rgba(0,0,0,.08);
+    background-image:repeating-linear-gradient(to bottom, transparent, transparent 27px, #f2f1ec 27px, #f2f1ec 28px);
+  }
+  .recibo-cabecera{border-bottom:1px dashed #ccc;padding-bottom:10px;margin-bottom:10px;}
+  .recibo-cabecera .titulo{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;}
+  .recibo-cabecera .sub{color:var(--texto-tenue);font-size:10.5px;margin-top:3px;}
+  .recibo pre{white-space:pre-wrap;word-break:break-word;margin:0;color:var(--texto);}
+  .recibo.ok .recibo-cabecera .sub{color:var(--ok);}
+  .recibo.error .recibo-cabecera .sub{color:var(--err);}
+  .recibo-vacio{color:#a9a49a;text-align:center;padding:40px 10px;font-family:'Inter',sans-serif;font-size:13px;}
+  @media (max-width: 1000px){ .layout{grid-template-columns:1fr;} .sidebar{display:flex;overflow-x:auto;padding:14px 0;} .marca{display:none;} nav{display:flex;} }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ============ BARRA LATERAL ============ -->
+  <aside class="sidebar">
+    <div class="marca">
+      <div class="moneda">Ⓟ</div>
+      <h1>Fidelización</h1>
+      <p>Panel de pruebas del backend</p>
+    </div>
+    <nav id="menu">
+      <button data-tab="clientes" class="activo"><span class="num">01</span> Clientes</button>
+      <button data-tab="conceptos"><span class="num">02</span> Conceptos</button>
+      <button data-tab="reglas"><span class="num">03</span> Reglas de puntos</button>
+      <button data-tab="vencimientos"><span class="num">04</span> Vencimientos</button>
+      <button data-tab="bolsas"><span class="num">05</span> Bolsa de puntos</button>
+      <button data-tab="uso"><span class="num">06</span> Uso de puntos</button>
+      <button data-tab="servicios"><span class="num">08</span> Servicios</button>
+      <button data-tab="consultas"><span class="num">07</span> Consultas</button>
+    </nav>
+  </aside>
+
+  <!-- ============ CONTENIDO CENTRAL ============ -->
+  <main>
+    <div class="encabezado">
+      <h1 id="titulo-tab">Clientes</h1>
+      <p id="descripcion-tab">Alta, baja, modificación y consulta de clientes.</p>
+      <div class="estado-servidor"><span class="punto" id="punto-estado"></span><span id="texto-estado">Verificando conexión con el servidor…</span></div>
+    </div>
+    <div id="contenedor-tabs"></div>
+  </main>
+
+  <!-- ============ RECIBO / RESPUESTA ============ -->
+  <div class="recibo-columna">
+    <div class="recibo" id="recibo">
+      <div class="recibo-vacio">Las respuestas del servidor<br>aparecerán acá, como<br>un comprobante.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const BASE = '/api';
+
+/* ---------------------------------------------------------------
+   Definición de cada módulo CRUD: nombre, endpoint y campos del
+   formulario. Con esto se arma automáticamente el formulario de
+   alta/edición y la tabla de resultados para cada módulo.
+---------------------------------------------------------------- */
+const MODULOS = {
+  clientes: {
+    titulo: 'Clientes', endpoint: '/clientes',
+    descripcion: 'Alta, baja, modificación y consulta de clientes.',
+    campos: [
+      {n:'nombre', t:'text', l:'Nombre'},
+      {n:'apellido', t:'text', l:'Apellido'},
+      {n:'numeroDocumento', t:'text', l:'N° documento'},
+      {n:'tipoDocumento', t:'text', l:'Tipo documento', ph:'CI, Pasaporte...'},
+      {n:'nacionalidad', t:'text', l:'Nacionalidad'},
+      {n:'email', t:'email', l:'Email'},
+      {n:'telefono', t:'text', l:'Teléfono'},
+      {n:'fechaNacimiento', t:'date', l:'Fecha nacimiento'},
+    ]
+  },
+  conceptos: {
+    titulo: 'Conceptos de uso de puntos', endpoint: '/conceptos',
+    descripcion: 'Ej: vale de premio, vale de descuento, vale de consumición.',
+    campos: [
+      {n:'descripcion', t:'text', l:'Descripción'},
+      {n:'puntosRequeridos', t:'number', l:'Puntos requeridos'},
+    ]
+  },
+  reglas: {
+    titulo: 'Reglas de asignación de puntos', endpoint: '/reglas',
+    descripcion: 'Definen cuántos Gs. equivalen a 1 punto según el rango de consumo. Dejá "Límite superior" vacío si no tiene tope.',
+    campos: [
+      {n:'limiteInferior', t:'number', l:'Límite inferior (Gs.)'},
+      {n:'limiteSuperior', t:'number', l:'Límite superior (Gs.)', opcional:true},
+      {n:'montoEquivalencia', t:'number', l:'Gs. por 1 punto'},
+    ]
+  },
+  vencimientos: {
+    titulo: 'Parametrización de vencimientos', endpoint: '/vencimientos',
+    descripcion: 'Define cuántos días de validez tienen los puntos asignados en un período.',
+    campos: [
+      {n:'fechaInicioValidez', t:'date', l:'Vigente desde'},
+      {n:'fechaFinValidez', t:'date', l:'Vigente hasta'},
+      {n:'diasDuracion', t:'number', l:'Días de duración del puntaje'},
+    ]
+  },
+  bolsas: {
+    titulo: 'Bolsa de puntos', endpoint: '/bolsas-puntos',
+    descripcion: 'Normalmente se generan solas desde "Servicios → Cargar puntos". Acá también se pueden administrar manualmente.',
+    campos: [
+      {n:'clienteId', t:'number', l:'ID cliente'},
+      {n:'fechaAsignacion', t:'date', l:'Fecha asignación'},
+      {n:'fechaCaducidad', t:'date', l:'Fecha caducidad'},
+      {n:'puntajeAsignado', t:'number', l:'Puntaje asignado'},
+      {n:'montoOperacion', t:'number', l:'Monto de la operación'},
+    ]
+  },
+};
+
+let tabActual = 'clientes';
+
+/* --------------------- Muestra la respuesta en el "recibo" --------------------- */
+function mostrarRecibo(metodo, ruta, ok, cuerpo){
+  const recibo = document.getElementById('recibo');
+  recibo.className = 'recibo ' + (ok ? 'ok' : 'error');
+  recibo.innerHTML = `
+    <div class="recibo-cabecera">
+      <div class="titulo">${metodo} ${ruta}</div>
+      <div class="sub">${ok ? '✓ Respuesta exitosa' : '✕ Error en la solicitud'} — ${new Date().toLocaleTimeString()}</div>
+    </div>
+    <pre>${escaparHtml(JSON.stringify(cuerpo, null, 2))}</pre>
+  `;
+}
+
+function escaparHtml(texto){
+  return texto.replace(/[&<>]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+/* --------------------- Llamada genérica a la API --------------------- */
+async function llamarApi(metodo, ruta, body){
+  try{
+    const opciones = { method: metodo, headers: {'Content-Type':'application/json'} };
+    if(body !== undefined) opciones.body = JSON.stringify(body);
+    const respuesta = await fetch(BASE + ruta, opciones);
+    const data = await respuesta.json();
+    mostrarRecibo(metodo, ruta, respuesta.ok, data);
+    return { ok: respuesta.ok, data };
+  }catch(error){
+    mostrarRecibo(metodo, ruta, false, {exito:false, mensaje:'No se pudo conectar con el servidor. ¿Está corriendo "npm start"?'});
+    return { ok:false, data:null };
+  }
+}
+
+/* --------------------- Verifica si el servidor está encendido --------------------- */
+async function verificarServidor(){
+  const punto = document.getElementById('punto-estado');
+  const texto = document.getElementById('texto-estado');
+  try{
+    const r = await fetch('/');
+    if(r.ok){
+      punto.className = 'punto conectado';
+      texto.textContent = 'Conectado a http://localhost:3000';
+    }else{ throw new Error(); }
+  }catch(e){
+    punto.className = 'punto error';
+    texto.textContent = 'No se detecta el servidor. Ejecutá "npm start" en la terminal.';
+  }
+}
+
+/* --------------------- Construye el HTML de un módulo CRUD --------------------- */
+function construirPanelCrud(clave){
+  const modulo = MODULOS[clave];
+  const camposHtml = modulo.campos.map(c => `
+    <div>
+      <label>${c.l}${c.opcional ? ' (opcional)':''}</label>
+      <input type="${c.t}" id="campo-${clave}-${c.n}" placeholder="${c.ph||''}">
+    </div>
+  `).join('');
+
+  return `
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-post">POST</span> Crear nuevo registro</h3>
+      <div class="fila">${camposHtml}</div>
+      <div class="acciones">
+        <button class="accion" onclick="crearRegistro('${clave}')">Guardar</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Consultar</h3>
+      <div class="acciones">
+        <button class="accion secundaria" onclick="listarRegistros('${clave}')">Listar todos</button>
+      </div>
+      <table id="tabla-${clave}"><thead></thead><tbody></tbody></table>
+    </div>
+
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-put">PUT</span> Actualizar por ID</h3>
+      <div class="fila">
+        <div><label>ID a actualizar</label><input type="number" id="editar-id-${clave}"></div>
+        ${camposHtml.replaceAll(`campo-${clave}-`, `editar-${clave}-`)}
+      </div>
+      <div class="acciones"><button class="accion secundaria" onclick="actualizarRegistro('${clave}')">Actualizar</button></div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-delete">DELETE</span> Eliminar por ID</h3>
+      <div class="fila" style="max-width:200px;"><input type="number" id="eliminar-id-${clave}" placeholder="ID"></div>
+      <div class="acciones"><button class="accion peligro" onclick="eliminarRegistro('${clave}')">Eliminar</button></div>
+    </div>
+  `;
+}
+
+function leerCampos(clave, prefijo){
+  const modulo = MODULOS[clave];
+  const datos = {};
+  modulo.campos.forEach(c => {
+    const el = document.getElementById(`${prefijo}-${clave}-${c.n}`);
+    const valor = el.value;
+    if(valor === ''){
+      if(!c.opcional) return;
+      datos[c.n] = null;
+    }else{
+      datos[c.n] = c.t === 'number' ? Number(valor) : valor;
+    }
+  });
+  return datos;
+}
+
+async function crearRegistro(clave){
+  const datos = leerCampos(clave, 'campo');
+  const r = await llamarApi('POST', MODULOS[clave].endpoint, datos);
+  if(r.ok) listarRegistros(clave);
+}
+async function actualizarRegistro(clave){
+  const id = document.getElementById(`editar-id-${clave}`).value;
+  if(!id) return alert('Indicá el ID a actualizar');
+  const datos = leerCampos(clave, 'editar');
+  const r = await llamarApi('PUT', `${MODULOS[clave].endpoint}/${id}`, datos);
+  if(r.ok) listarRegistros(clave);
+}
+async function eliminarRegistro(clave){
+  const id = document.getElementById(`eliminar-id-${clave}`).value;
+  if(!id) return alert('Indicá el ID a eliminar');
+  const r = await llamarApi('DELETE', `${MODULOS[clave].endpoint}/${id}`);
+  if(r.ok) listarRegistros(clave);
+}
+async function listarRegistros(clave){
+  const r = await llamarApi('GET', MODULOS[clave].endpoint);
+  const tabla = document.getElementById(`tabla-${clave}`);
+  if(!r.ok || !r.data.datos || r.data.datos.length === 0){
+    tabla.innerHTML = '<tbody><tr><td style="color:#999;padding:14px 0;">Sin registros todavía.</td></tr></tbody>';
+    return;
+  }
+  const filas = r.data.datos;
+  const columnas = Object.keys(filas[0]);
+  tabla.innerHTML = `
+    <thead><tr>${columnas.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+    <tbody>${filas.map(f=>`<tr>${columnas.map(c=>`<td>${f[c] === null ? '—' : f[c]}</td>`).join('')}</tr>`).join('')}</tbody>
+  `;
+}
+
+/* --------------------- Panel de Uso de puntos (solo lectura) --------------------- */
+function construirPanelUso(){
+  return `
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Listar usos de puntos generados</h3>
+      <div class="acciones"><button class="accion secundaria" onclick="listarUso()">Listar todos</button></div>
+      <table id="tabla-uso"><thead></thead><tbody></tbody></table>
+    </div>
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Ver un registro (con detalle)</h3>
+      <div class="fila" style="max-width:200px;"><input type="number" id="uso-id" placeholder="ID cabecera"></div>
+      <div class="acciones"><button class="accion secundaria" onclick="verUso()">Consultar</button></div>
+    </div>
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-delete">DELETE</span> Eliminar registro</h3>
+      <div class="fila" style="max-width:200px;"><input type="number" id="uso-id-borrar" placeholder="ID cabecera"></div>
+      <div class="acciones"><button class="accion peligro" onclick="borrarUso()">Eliminar</button></div>
+    </div>
+  `;
+}
+async function listarUso(){
+  const r = await llamarApi('GET', '/uso-puntos');
+  const tabla = document.getElementById('tabla-uso');
+  if(!r.ok || !r.data.datos || r.data.datos.length===0){
+    tabla.innerHTML = '<tbody><tr><td style="color:#999;padding:14px 0;">Sin registros todavía.</td></tr></tbody>';
+    return;
+  }
+  const filas = r.data.datos;
+  const columnas = Object.keys(filas[0]);
+  tabla.innerHTML = `<thead><tr>${columnas.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+    <tbody>${filas.map(f=>`<tr>${columnas.map(c=>`<td>${f[c]}</td>`).join('')}</tr>`).join('')}</tbody>`;
+}
+async function verUso(){
+  const id = document.getElementById('uso-id').value;
+  if(!id) return alert('Indicá el ID');
+  await llamarApi('GET', `/uso-puntos/${id}`);
+}
+async function borrarUso(){
+  const id = document.getElementById('uso-id-borrar').value;
+  if(!id) return alert('Indicá el ID');
+  await llamarApi('DELETE', `/uso-puntos/${id}`);
+}
+
+/* --------------------- Panel de Servicios --------------------- */
+function construirPanelServicios(){
+  return `
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-post">POST</span> Cargar puntos por una operación</h3>
+      <div class="fila">
+        <div><label>ID cliente</label><input type="number" id="carga-clienteId"></div>
+        <div><label>Monto de la operación (Gs.)</label><input type="number" id="carga-monto"></div>
+      </div>
+      <div class="acciones"><button class="accion" onclick="cargarPuntos()">Cargar puntos</button></div>
+    </div>
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-post">POST</span> Utilizar puntos (envía comprobante)</h3>
+      <div class="fila">
+        <div><label>ID cliente</label><input type="number" id="uso-clienteId"></div>
+        <div><label>ID concepto</label><input type="number" id="uso-conceptoId"></div>
+      </div>
+      <div class="acciones"><button class="accion" onclick="utilizarPuntos()">Utilizar puntos</button></div>
+    </div>
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Consultar equivalencia de un monto</h3>
+      <div class="fila" style="max-width:220px;">
+        <div><label>Monto (Gs.)</label><input type="number" id="equiv-monto"></div>
+      </div>
+      <div class="acciones"><button class="accion secundaria" onclick="consultarEquivalencia()">Consultar</button></div>
+    </div>
+  `;
+}
+async function cargarPuntos(){
+  const datos = { clienteId: Number(document.getElementById('carga-clienteId').value), monto: Number(document.getElementById('carga-monto').value) };
+  await llamarApi('POST', '/servicios/cargar-puntos', datos);
+}
+async function utilizarPuntos(){
+  const datos = { clienteId: Number(document.getElementById('uso-clienteId').value), conceptoId: Number(document.getElementById('uso-conceptoId').value) };
+  await llamarApi('POST', '/servicios/utilizar-puntos', datos);
+}
+async function consultarEquivalencia(){
+  const monto = document.getElementById('equiv-monto').value;
+  await llamarApi('GET', `/servicios/equivalencia?monto=${monto}`);
+}
+
+/* --------------------- Panel de Consultas / Reportes --------------------- */
+function construirPanelConsultas(){
+  return `
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Uso de puntos (por concepto, fecha o cliente)</h3>
+      <div class="fila">
+        <div><label>ID cliente</label><input type="number" id="c-uso-cliente"></div>
+        <div><label>ID concepto</label><input type="number" id="c-uso-concepto"></div>
+        <div><label>Fecha (YYYY-MM-DD)</label><input type="date" id="c-uso-fecha"></div>
+      </div>
+      <div class="acciones"><button class="accion secundaria" onclick="consultaUso()">Consultar</button></div>
+    </div>
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Bolsa de puntos (por cliente o rango)</h3>
+      <div class="fila">
+        <div><label>ID cliente</label><input type="number" id="c-bolsa-cliente"></div>
+        <div><label>Puntos mínimo</label><input type="number" id="c-bolsa-min"></div>
+        <div><label>Puntos máximo</label><input type="number" id="c-bolsa-max"></div>
+      </div>
+      <div class="acciones"><button class="accion secundaria" onclick="consultaBolsa()">Consultar</button></div>
+    </div>
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Clientes con puntos a vencer</h3>
+      <div class="fila" style="max-width:200px;"><div><label>Dentro de (días)</label><input type="number" id="c-vencer-dias" value="30"></div></div>
+      <div class="acciones"><button class="accion secundaria" onclick="consultaVencer()">Consultar</button></div>
+    </div>
+    <div class="panel">
+      <h3><span class="etiqueta-metodo m-get">GET</span> Buscar clientes (nombre, apellido, cumpleaños)</h3>
+      <div class="fila">
+        <div><label>Nombre contiene</label><input type="text" id="c-cli-nombre"></div>
+        <div><label>Apellido contiene</label><input type="text" id="c-cli-apellido"></div>
+        <div><label>Cumpleaños (YYYY-MM-DD)</label><input type="date" id="c-cli-cumple"></div>
+      </div>
+      <div class="acciones"><button class="accion secundaria" onclick="consultaClientes()">Buscar</button></div>
+    </div>
+  `;
+}
+function armarQuery(params){
+  const partes = Object.entries(params).filter(([,v]) => v !== '' && v !== null && v !== undefined);
+  return partes.length ? '?' + partes.map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&') : '';
+}
+async function consultaUso(){
+  const q = armarQuery({clienteId:document.getElementById('c-uso-cliente').value, conceptoId:document.getElementById('c-uso-concepto').value, fecha:document.getElementById('c-uso-fecha').value});
+  await llamarApi('GET', '/consultas/uso-puntos'+q);
+}
+async function consultaBolsa(){
+  const q = armarQuery({clienteId:document.getElementById('c-bolsa-cliente').value, puntosMin:document.getElementById('c-bolsa-min').value, puntosMax:document.getElementById('c-bolsa-max').value});
+  await llamarApi('GET', '/consultas/bolsa-puntos'+q);
+}
+async function consultaVencer(){
+  const q = armarQuery({dias:document.getElementById('c-vencer-dias').value});
+  await llamarApi('GET', '/consultas/clientes-por-vencer'+q);
+}
+async function consultaClientes(){
+  const q = armarQuery({nombre:document.getElementById('c-cli-nombre').value, apellido:document.getElementById('c-cli-apellido').value, cumpleanios:document.getElementById('c-cli-cumple').value});
+  await llamarApi('GET', '/consultas/clientes'+q);
+}
+
+/* --------------------- Navegación entre tabs --------------------- */
+const TITULOS = {
+  clientes: MODULOS.clientes, conceptos: MODULOS.conceptos, reglas: MODULOS.reglas,
+  vencimientos: MODULOS.vencimientos, bolsas: MODULOS.bolsas,
+  uso: {titulo:'Uso de puntos', descripcion:'Los registros se generan desde "Servicios → Utilizar puntos". Acá se consultan.'},
+  servicios: {titulo:'Servicios', descripcion:'Cargar puntos, utilizar puntos (con envío de comprobante) y consultar equivalencias.'},
+  consultas: {titulo:'Consultas y reportes', descripcion:'Reportes de solo lectura sobre uso de puntos, bolsas y clientes.'},
+};
+
+function irATab(clave){
+  tabActual = clave;
+  document.querySelectorAll('#menu button').forEach(b => b.classList.toggle('activo', b.dataset.tab === clave));
+  document.getElementById('titulo-tab').textContent = TITULOS[clave].titulo;
+  document.getElementById('descripcion-tab').textContent = TITULOS[clave].descripcion;
+
+  const cont = document.getElementById('contenedor-tabs');
+  if(MODULOS[clave]) cont.innerHTML = construirPanelCrud(clave);
+  else if(clave === 'uso') cont.innerHTML = construirPanelUso();
+  else if(clave === 'servicios') cont.innerHTML = construirPanelServicios();
+  else if(clave === 'consultas') cont.innerHTML = construirPanelConsultas();
+
+  if(MODULOS[clave]) listarRegistros(clave);
+  if(clave === 'uso') listarUso();
+}
+
+document.querySelectorAll('#menu button').forEach(boton => {
+  boton.addEventListener('click', () => irATab(boton.dataset.tab));
+});
+
+verificarServidor();
+irATab('clientes');
+</script>
+</body>
+</html>

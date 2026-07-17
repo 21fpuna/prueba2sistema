@@ -1,0 +1,7 @@
+{
+  "clientes": "[{\"id\":1,\"nombre\":\"AAA\",\"apellido\":\"AAA\",\"numeroDocumento\":\"1\",\"tipoDocumento\":\"CI\",\"nacionalidad\":\"Paraguaya\",\"email\":\"aaa@gmail.com\",\"telefono\":\"1\",\"fechaNacimiento\":\"2015-01-01\"},{\"id\":2,\"nombre\":\"BBB\",\"apellido\":\"BBB\",\"numeroDocumento\":\"222\",\"tipoDocumento\":\"CI\",\"nacionalidad\":\"2\",\"email\":\"FSGS@GMAIL.COM\",\"telefono\":\"222\",\"fechaNacimiento\":\"1997-01-03\"},{\"id\":3,\"nombre\":\"a\",\"apellido\":\"a\",\"numeroDocumento\":\"1\",\"tipoDocumento\":\"ci\",\"nacionalidad\":\"py\",\"email\":\"a@gmail.com\",\"telefono\":\"1\",\"fechaNacimiento\":\"2010-12-26\"}]",
+  "conceptos": "[{\"id\":1,\"descripcion\":\"BBB\",\"puntosRequeridos\":1000}]",
+  "reglas": "[{\"id\":1,\"limiteInferior\":100000,\"limiteSuperior\":null,\"montoEquivalencia\":2}]",
+  "vencimientos": "[{\"id\":1,\"fechaInicioValidez\":\"2026-07-01\",\"fechaFinValidez\":\"2026-07-03\",\"diasDuracion\":2}]",
+  "bolsasPuntos": "[{\"id\":1,\"clienteId\":1,\"fechaAsignacion\":\"2026-07-01\",\"fechaCaducidad\":\"2026-07-03\",\"puntajeAsignado\":100,\"puntajeUtilizado\":0,\"saldo\":0,\"montoOperacion\":10000000,\"estado\":\"vencido\"}]"
+}

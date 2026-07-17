@@ -1,0 +1,19 @@
+{
+  "name": "sistema-fidelizacion-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Frontend React del sistema de fidelización (diseño basado en el Make de Figma). Se compila con esbuild hacia ../public.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch"
+  },
+  "dependencies": {
+    "react": "^18.3.1 || ^19.0.0",
+    "react-dom": "^18.3.1 || ^19.0.0",
+    "react-icons": "^5.4.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

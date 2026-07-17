@@ -1,0 +1,41 @@
+/**
+ * Re-exporta los íconos de Lucide (vía react-icons) con los mismos nombres
+ * que usa el diseño original de Figma Make, para que los componentes de las
+ * páginas no cambien.
+ */
+export {
+  LuUsers as Users,
+  LuGift as Gift,
+  LuSettings as Settings,
+  LuWallet as Wallet,
+  LuTrendingUp as TrendingUp,
+  LuTrendingDown as TrendingDown,
+  LuFileText as FileText,
+  LuCog as Cog,
+  LuCalendar as Calendar,
+  LuPlus as Plus,
+  LuPencil as Edit,
+  LuTrash2 as Trash2,
+  LuSearch as Search,
+  LuChevronDown as ChevronDown,
+  LuChevronUp as ChevronUp,
+  LuMail as Mail,
+  LuCheck as Check,
+  LuCalculator as Calculator,
+  LuTriangleAlert as AlertTriangle,
+  LuCircleAlert as AlertCircle,
+  LuHouse as Home,
+  LuX as X,
+  LuMenu as Menu,
+  LuAward as Award,
+  LuShoppingBag as ShoppingBag,
+  LuMegaphone as Megaphone,
+  LuTrophy as Trophy,
+  LuMessageSquare as MessageSquare,
+  LuStar as Star,
+  LuMedal as Medal,
+  LuTarget as Target,
+  LuCrown as Crown,
+  LuSparkles as Sparkles,
+  LuBadgeCheck as BadgeCheck,
+} from "react-icons/lu";

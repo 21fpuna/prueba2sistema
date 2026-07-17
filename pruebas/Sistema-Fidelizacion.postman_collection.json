@@ -1,0 +1,1537 @@
+{
+  "info": {
+    "name": "Sistema de Fidelización — Colección de pruebas",
+    "description": "Colección completa de peticiones GET/POST/PUT/DELETE para validar todos los módulos del Sistema de Fidelización de Clientes.\n\nOrden sugerido para la demostración del examen:\n1. Clientes → Crear cliente\n2. Reglas → Crear regla\n3. Vencimientos → Crear parámetro\n4. Conceptos → Crear concepto\n5. Servicios → Cargar puntos (genera la bolsa)\n6. Servicios → Consultar equivalencia\n7. Servicios → Utilizar puntos (genera cabecera + detalle y envía comprobante)\n8. Uso de Puntos / Bolsas / Consultas → verificar los datos generados\n\nRequiere el servidor corriendo: npm start (http://localhost:3000)\n\nIncluye los módulos adicionales del Segundo Final: Niveles (10), Canje por Productos (11), Promociones (12), Gamificación (13) y Encuestas (14).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Clientes (Módulo 1)",
+      "item": [
+        {
+          "name": "POST Crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"Pérez\",\n  \"numeroDocumento\": \"4123456\",\n  \"tipoDocumento\": \"CI\",\n  \"nacionalidad\": \"Paraguaya\",\n  \"email\": \"juan.perez@email.com\",\n  \"telefono\": \"+595981123456\",\n  \"fechaNacimiento\": \"1990-05-15\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Listar todos los clientes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/clientes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener cliente por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/clientes/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefono\": \"+595981999888\",\n  \"email\": \"juan.actualizado@email.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/clientes/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar cliente",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/clientes/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clientes",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Conceptos de uso (Módulo 2)",
+      "item": [
+        {
+          "name": "POST Crear concepto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Vale de descuento 10%\",\n  \"puntosRequeridos\": 500\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/conceptos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conceptos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Listar conceptos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/conceptos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conceptos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener concepto por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/conceptos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conceptos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar concepto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntosRequeridos\": 600\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/conceptos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conceptos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar concepto",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/conceptos/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "conceptos",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Reglas de asignación (Módulo 3)",
+      "item": [
+        {
+          "name": "POST Crear regla (con rango)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"limiteInferior\": 0,\n  \"limiteSuperior\": 199999,\n  \"montoEquivalencia\": 50000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reglas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reglas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Crear regla (sin tope)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"limiteInferior\": 200000,\n  \"limiteSuperior\": null,\n  \"montoEquivalencia\": 30000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reglas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reglas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Listar reglas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/reglas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reglas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener regla por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/reglas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reglas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar regla",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"montoEquivalencia\": 45000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reglas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reglas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar regla",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/reglas/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reglas",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Vencimientos (Módulo 4)",
+      "item": [
+        {
+          "name": "POST Crear parámetro de vencimiento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fechaInicioValidez\": \"2026-01-01\",\n  \"fechaFinValidez\": \"2026-12-31\",\n  \"diasDuracion\": 180\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vencimientos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vencimientos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Listar parámetros",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/vencimientos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vencimientos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener parámetro por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/vencimientos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vencimientos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar parámetro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diasDuracion\": 365\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vencimientos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vencimientos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar parámetro",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/vencimientos/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "vencimientos",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Bolsa de puntos (Módulo 5)",
+      "item": [
+        {
+          "name": "POST Crear bolsa (manual)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"fechaAsignacion\": \"2026-07-01\",\n  \"fechaCaducidad\": \"2026-12-31\",\n  \"puntajeAsignado\": 100,\n  \"montoOperacion\": 500000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/bolsas-puntos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bolsas-puntos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Listar bolsas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/bolsas-puntos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bolsas-puntos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener bolsa por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/bolsas-puntos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bolsas-puntos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar bolsa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"vigente\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/bolsas-puntos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bolsas-puntos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar bolsa",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/bolsas-puntos/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "bolsas-puntos",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Uso de puntos (Módulo 6)",
+      "item": [
+        {
+          "name": "GET Listar usos de puntos (cabeceras)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/uso-puntos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "uso-puntos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener uso por ID (con detalle FIFO)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/uso-puntos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "uso-puntos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar uso de puntos",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/uso-puntos/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "uso-puntos",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Consultas y reportes (Módulo 7)",
+      "item": [
+        {
+          "name": "GET Uso de puntos filtrado",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/consultas/uso-puntos?clienteId=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "consultas",
+                "uso-puntos"
+              ],
+              "query": [
+                {
+                  "key": "clienteId",
+                  "value": "1"
+                },
+                {
+                  "key": "conceptoId",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "fecha",
+                  "value": "2026-07-13",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Bolsas por cliente y rango de puntos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/consultas/bolsa-puntos?clienteId=1&puntosMin=0&puntosMax=100000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "consultas",
+                "bolsa-puntos"
+              ],
+              "query": [
+                {
+                  "key": "clienteId",
+                  "value": "1"
+                },
+                {
+                  "key": "puntosMin",
+                  "value": "0"
+                },
+                {
+                  "key": "puntosMax",
+                  "value": "100000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Clientes con puntos a vencer",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/consultas/clientes-por-vencer?dias=30",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "consultas",
+                "clientes-por-vencer"
+              ],
+              "query": [
+                {
+                  "key": "dias",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Búsqueda de clientes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/consultas/clientes?nombre=ju",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "consultas",
+                "clientes"
+              ],
+              "query": [
+                {
+                  "key": "nombre",
+                  "value": "ju"
+                },
+                {
+                  "key": "apellido",
+                  "value": "pe",
+                  "disabled": true
+                },
+                {
+                  "key": "cumpleanios",
+                  "value": "1990-05-15",
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Servicios (Módulo 8)",
+      "item": [
+        {
+          "name": "POST Cargar puntos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"monto\": 500000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/servicios/cargar-puntos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "cargar-puntos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Utilizar puntos (FIFO + comprobante)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"conceptoId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/servicios/utilizar-puntos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "utilizar-puntos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Consultar equivalencia de un monto",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/servicios/equivalencia?monto=350000",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "equivalencia"
+              ],
+              "query": [
+                {
+                  "key": "monto",
+                  "value": "350000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Niveles de Fidelización (Módulo 10)",
+      "item": [
+        {
+          "name": "POST Crear nivel",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/niveles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "niveles"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Diamante\",\n  \"puntosMinimos\": 30000,\n  \"beneficios\": \"Beneficios premium y regalos exclusivos\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Listar niveles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/niveles",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "niveles"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Nivel de un cliente",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/niveles/cliente/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "niveles",
+                "cliente",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener nivel por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/niveles/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "niveles",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar nivel",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/niveles/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "niveles",
+                "1"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"beneficios\": \"Acceso al programa y sorteos mensuales\"\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar nivel",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/niveles/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "niveles",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Canje por Productos (Módulo 11)",
+      "item": [
+        {
+          "name": "POST Crear producto",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Parlante portátil\",\n  \"descripcion\": \"Parlante bluetooth resistente al agua\",\n  \"precio\": 400000,\n  \"puntosNecesarios\": 80\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Listar catálogo",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/productos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener producto por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/productos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar producto",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/productos/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "1"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntosNecesarios\": 35\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar producto",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/productos/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "productos",
+                "99"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Canjear producto (servicio, FIFO + comprobante)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/servicios/canjear-producto",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "canjear-producto"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Listar canjes realizados",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/canjes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "canjes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener canje por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/canjes/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "canjes",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar canje",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/canjes/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "canjes",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11. Promociones (Módulo 12)",
+      "item": [
+        {
+          "name": "POST Crear promoción",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/promociones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "promociones"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Triple puntos fin de semana\",\n  \"fechaInicio\": \"2026-08-01\",\n  \"fechaFin\": \"2026-08-03\",\n  \"multiplicador\": 3,\n  \"productoId\": null,\n  \"activa\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Listar promociones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/promociones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "promociones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Promociones vigentes hoy",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/promociones/vigentes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "promociones",
+                "vigentes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener promoción por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/promociones/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "promociones",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar promoción (desactivar)",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/promociones/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "promociones",
+                "1"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activa\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT Reactivar promoción",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/promociones/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "promociones",
+                "1"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activa\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar promoción",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/promociones/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "promociones",
+                "99"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Cargar puntos CON promoción aplicada",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/servicios/cargar-puntos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "servicios",
+                "cargar-puntos"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"monto\": 300000\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "12. Gamificación (Módulo 13)",
+      "item": [
+        {
+          "name": "POST Crear desafío",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/desafios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "desafios"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Maratonista de puntos\",\n  \"descripcion\": \"Acumula 5000 puntos en el año\",\n  \"metaPuntos\": 5000,\n  \"puntosRecompensa\": 500,\n  \"fechaInicio\": \"2026-01-01\",\n  \"fechaFin\": \"2026-12-31\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Listar desafíos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/desafios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "desafios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar desafío",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/desafios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "desafios",
+                "1"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"puntosRecompensa\": 25\n}"
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar desafío",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/desafios/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "desafios",
+                "99"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Ranking de clientes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/gamificacion/ranking?limite=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "gamificacion",
+                "ranking"
+              ],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Insignias de un cliente",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/gamificacion/insignias/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "gamificacion",
+                "insignias",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Progreso de desafíos de un cliente",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/gamificacion/desafios/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "gamificacion",
+                "desafios",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST Reclamar recompensa de desafío",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/gamificacion/desafios/reclamar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "gamificacion",
+                "desafios",
+                "reclamar"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"desafioId\": 2\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "13. Encuestas de Satisfacción (Módulo 14)",
+      "item": [
+        {
+          "name": "POST Registrar encuesta",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/encuestas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "encuestas"
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"puntuacion\": 5,\n  \"comentario\": \"Excelente programa de puntos\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET Listar encuestas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/encuestas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "encuestas"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Resumen (promedio y distribución)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/encuestas/resumen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "encuestas",
+                "resumen"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Obtener encuesta por ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/encuestas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "encuestas",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar encuesta",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/encuestas/99",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "encuestas",
+                "99"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
